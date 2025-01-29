@@ -25,8 +25,8 @@ func main() {
 	exPath := filepath.Dir(ex)
 	configpath := *config
 	if *config == "" {
-		if configEnv, exists := os.LookupEnv("BW_PINENTRY_CONFIG"); exists {
-			configpath = configEnv
+		if configHome, exists := os.LookupEnv("XDG_CONFIG_HOME"); exists {
+			configpath = path.Join(configHome, ConfigFileName)
 		} else {
 			configpath = path.Join(exPath, ConfigFileName)
 		}
@@ -34,6 +34,9 @@ func main() {
 
 	configuration := loadConfig(configpath)
 	logPath := path.Join(exPath, LogFileName)
+	if cacheHome, exists := os.LookupEnv("XDG_CACHE_HOME"); exists {
+		logPath = path.Join(cacheHome, LogFileName)
+	}
 	if configuration.LogPath != "" {
 		logPath = configuration.LogPath
 	}
