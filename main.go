@@ -25,7 +25,11 @@ func main() {
 	exPath := filepath.Dir(ex)
 	configpath := *config
 	if *config == "" {
-		configpath = path.Join(exPath, ConfigFileName)
+		if configEnv, exists := os.LookupEnv("BW_PINENTRY_CONFIG"); exists {
+			configpath = configEnv
+		} else {
+			configpath = path.Join(exPath, ConfigFileName)
+		}
 	}
 
 	configuration := loadConfig(configpath)
